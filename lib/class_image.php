@@ -117,10 +117,8 @@ abstract class image {
             $img = $image->image;
 
         } elseif (is_array($image)) {
-            list($key, $width) = current($image);
-          		next($image);
-            list($key, $height) = current($image);
-			         next($image);
+            list($key, $width) = $this->legacy_each($image);
+            list($key, $height) = $this->legacy_each($image);
 
             $img = $this->getBlankImage($width, $height);
 
@@ -132,6 +130,18 @@ abstract class image {
             : false;
     }
 
+    private function legacy_each($array){
+        $key = key($array);
+        $value = current($array);
+        $each = is_null($key) ? false : [
+            1        => $value,
+            'value'    => $value,
+            0        => $key,
+            'key'    => $key,
+        ];
+        next($array);
+        return $each;
+    }
 
 /** Returns calculated proportional width from the given height
   * @param integer $resizedHeight
